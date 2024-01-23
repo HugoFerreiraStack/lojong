@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:lojong/config/routes/app_navigator.dart';
 import 'package:lojong/config/routes/app_routes.dart';
 
 bool isConnected = false;
 bool connectionError = false;
 bool connectionPageEnable = true;
+bool reconnecting = false;
 dynamic stateVar = AppLifecycleState.resumed;
+
+Function? onReconnected;
 
 class ConnectivityHelper with WidgetsBindingObserver {
   static bool canCheckConnection() {
@@ -47,6 +51,27 @@ class ConnectivityHelper with WidgetsBindingObserver {
       }
       connectionPageEnable = true;
     }
+  }
+
+  static Future<bool> tryReconnect() async {
+    if (await hasConnection()) {
+      connectionError = false;
+      connectionPageEnable = false;
+      if (onReconnected != null) {
+        onReconnected;
+      }
+
+      final List<String> routes = [];
+      if (AppNavigator.lastRooute != null && routes.contains(AppNavigator.lastRooute)) {
+        final String route = AppNavigator.lastRooute!;
+        reconnecting = true;
+        await AppNavigator.pushNamed(route);
+      } else {
+        AppNavigator.pushNamed('/');
+      }
+      return true;
+    }
+    return false;
   }
 
   static InternetConnectionChecker internetChecker = InternetConnectionChecker.createInstance(
