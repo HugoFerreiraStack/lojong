@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 void main() async {
-  await runZonedGuarded<Future<void>>(() {
+  await runZonedGuarded<Future<void>>(() async {
     WidgetsFlutterBinding.ensureInitialized();
   }, (error, stack) {});
   runApp(const MyApp());

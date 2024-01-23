@@ -23,6 +23,7 @@ dependencies:
   flutter_svg: ^2.0.9
   get_it: ^7.6.7
   internet_connection_checker: ^1.0.0+1
+  mockito: ^5.4.4
 
 dev_dependencies:
   flutter_test:
